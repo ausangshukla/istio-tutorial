@@ -78,3 +78,45 @@ kubectl replace -f istiofiles/virtual-service-recommendation-v1.yml -n tutorial
 # Back to v1 & v2
 
 kubectl delete -f istiofiles/virtual-service-recommendation-v1.yml -n tutorial
+
+# Routing 90% traffic to v1
+
+kubectl create -f istiofiles/virtual-service-recommendation-v1_and_v2.yml -n tutorial
+
+kubectl replace -f istiofiles/virtual-service-recommendation-v1_and_v2_75_25.yml -n tutorial
+
+# Cleanup
+
+kubectl delete -f istiofiles/virtual-service-recommendation-v1_and_v2_75_25.yml -n tutorial
+
+kubectl delete -f istiofiles/destination-rule-recommendation-v1-v2.yml -n tutorial
+
+# User specific routing
+
+kubectl create -f istiofiles/destination-rule-recommendation-v1-v2.yml -n tutorial
+
+kubectl create -f istiofiles/virtual-service-recommendation-v1.yml -n tutorial
+
+kubectl replace -f istiofiles/virtual-service-safari-recommendation-v2.yml -n tutorial
+
+kubectl get virtualservice -n tutorial
+
+curl -A Safari -l $GATEWAY_URL/customer
+
+# Cleanup Safari rule
+
+kubectl delete -f istiofiles/virtual-service-safari-recommendation-v2.yml -n tutorial
+
+# Mobile users to v2
+
+kubectl create -f istiofiles/virtual-service-mobile-recommendation-v2.yml -n tutorial
+
+curl -A "Mozilla/5.0 (iPhone; U; CPU iPhone OS 4(KHTML, like Gecko) Version/5.0.2 Mobile/8J2 Safari/6533.18.5" $GATEWAY_URL/customer
+
+# Cleanup mobile user
+
+kubectl delete -f istiofiles/destination-rule-recommendation-v1-v2.yml -n tutorial
+
+kubectl delete -f istiofiles/virtual-service-mobile-recommendation-v2.yml -n tutorial
+
+# Clean up

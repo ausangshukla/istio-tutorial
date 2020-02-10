@@ -36,6 +36,7 @@ curl localhost:8080/behave
 
 exit
 
-# Check the output - it will take 2-3 mins for the open circuit to close again.
+# Check the output - it will take 2-3 mins for the open circuit to close again. 
+# You should see output from v2 in a few mins
 
 ./scripts/run.sh $GATEWAY_URL/customer

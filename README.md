@@ -120,3 +120,4 @@ kubectl delete -f istiofiles/destination-rule-recommendation-v1-v2.yml -n tutori
 kubectl delete -f istiofiles/virtual-service-mobile-recommendation-v2.yml -n tutorial
 
 # Clean up
+./scripts/clean.sh tutorial

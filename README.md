@@ -1,6 +1,7 @@
 # istio-tutorial
 
 # Setup namespace
+
 kubectl create namespace tutorial
   
 kubectl config set-context $(kubectl config current-context) --namespace=tutorial
@@ -46,3 +47,34 @@ export GATEWAY_URL=$INGRESS_HOST:$INGRESS_PORT
 
 ./scripts/run.sh $GATEWAY_URL/customer
 
+# View the dashboards
+
+istioctl dashboard kiali
+
+istioctl dashboard jaeger
+
+kubectl -n istio-system port-forward $(kubectl -n istio-system get pod -l app=grafana -o jsonpath='{.items[0].metadata.name}') 3000:3000 &
+
+http://localhost:3000/dashboard/db/istio-mesh-dashboard 
+
+# Deploy v2 - to see load balanced traffic across v1 & v2
+
+kubectl apply -f <(istioctl kube-inject -f recommendation/kubernetes/Deployment-v2.yml) -n tutorial
+
+kubectl scale --replicas=2 deployment/recommendation-v2 -n tutorial
+
+kubectl get pods
+
+# Move all traffic to v2
+
+kubectl create -f istiofiles/destination-rule-recommendation-v1-v2.yml -n tutorial
+
+kubectl create -f istiofiles/virtual-service-recommendation-v2.yml -n tutorial
+
+# Move traffic back to v1
+
+kubectl replace -f istiofiles/virtual-service-recommendation-v1.yml -n tutorial
+
+# Back to v1 & v2
+
+kubectl delete -f istiofiles/virtual-service-recommendation-v1.yml -n tutorial

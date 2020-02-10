@@ -1,0 +1,8 @@
+
+# Load it up
+
+siege -r 10 -c 4 -v $GATEWAY_URL/customer
+
+# Make the recommendation v2 pod misbehave 
+
+kubectl exec -it -n tutorial $(kubectl get pods -n tutorial|grep recommendation-v2|awk '{ print $1 }'|head -1) -c recommendation /bin/bash

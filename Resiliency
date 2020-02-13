@@ -11,12 +11,11 @@ curl localhost:8080/misbehave
 
 exit
 
+# tail recommendation v2 logs
+kubectl logs -f deployment/recommendation-v2 --all-containers=true --since=10m
+
 # Load test it
 siege -r 10 -c 4 -v $GATEWAY_URL/customer
-
-# Check recommendation logs for hits
-
-kubectl logs recommendation-v2-2815683430-vpx4p -c recommendation -n tutorial
 
 # Add the circuit breaker
 

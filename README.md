@@ -49,9 +49,9 @@ export GATEWAY_URL=$INGRESS_HOST:$INGRESS_PORT
 
 # View the dashboards
 
-istioctl dashboard kiali
+istioctl dashboard kiali &
 
-istioctl dashboard jaeger
+istioctl dashboard jaeger &
 
 kubectl -n istio-system port-forward $(kubectl -n istio-system get pod -l app=grafana -o jsonpath='{.items[0].metadata.name}') 3000:3000 &
 
